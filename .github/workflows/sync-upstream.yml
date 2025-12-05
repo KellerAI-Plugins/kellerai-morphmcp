@@ -1,0 +1,131 @@
+name: Sync Upstream MorphLLM
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      force_merge:
+        description: 'Force merge even if tests fail'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check upstream for updates
+        id: check_upstream
+        run: |
+          UPSTREAM_VERSION=$(npm view @morphllm/morphmcp version)
+          CURRENT_VERSION=$(node -p "require('./package.json').kellerai.upstream.version")
+
+          echo "Upstream: $UPSTREAM_VERSION"
+          echo "Current: $CURRENT_VERSION"
+
+          echo "upstream_version=$UPSTREAM_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+          if [ "$UPSTREAM_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "update_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "update_available=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download upstream version
+        if: steps.check_upstream.outputs.update_available == 'true'
+        env:
+          UPSTREAM_VERSION: ${{ steps.check_upstream.outputs.upstream_version }}
+        run: |
+          mkdir -p /tmp/upstream
+          cd /tmp/upstream
+          npm pack "@morphllm/morphmcp@$UPSTREAM_VERSION"
+          tar -xzf *.tgz
+          echo "✅ Downloaded upstream v$UPSTREAM_VERSION"
+
+      - name: Run sync script
+        if: steps.check_upstream.outputs.update_available == 'true'
+        env:
+          UPSTREAM_VERSION: ${{ steps.check_upstream.outputs.upstream_version }}
+        run: |
+          node scripts/sync-upstream.js \
+            --upstream-path=/tmp/upstream/package \
+            --upstream-version="$UPSTREAM_VERSION"
+
+      - name: Verify all tools present
+        if: steps.check_upstream.outputs.update_available == 'true'
+        id: verify
+        run: |
+          npm test
+          echo "verification_passed=true" >> $GITHUB_OUTPUT
+
+      - name: Create version bump PR
+        if: steps.check_upstream.outputs.update_available == 'true' && steps.verify.outputs.verification_passed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        env:
+          UPSTREAM_VERSION: ${{ steps.check_upstream.outputs.upstream_version }}
+          CURRENT_VERSION: ${{ steps.check_upstream.outputs.current_version }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore: sync upstream to version from npm registry
+
+            - Merged upstream changes
+            - Preserved all 15 filesystem tools
+            - Verification tests passed
+          branch: upstream-sync-automated
+          delete-branch: true
+          title: 'Sync upstream MorphLLM package'
+          body: |
+            ## Upstream Sync
+
+            Automated sync from upstream npm package.
+
+            ### Changes
+            - Merged upstream package
+            - Re-applied filesystem tools patch
+            - All 15 tools verified ✅
+
+            ### Testing
+            - [x] Tool verification passed
+            - [x] ALL_TOOLS array complete
+            - [x] All handlers present
+
+            ### Next Steps
+            - Review changes
+            - Merge if approved
+            - Publish new kellerai release
+          labels: |
+            upstream-sync
+            automated
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          UPSTREAM_VERSION: ${{ steps.check_upstream.outputs.upstream_version }}
+          VERIFICATION_STATUS: ${{ steps.verify.outputs.verification_passed }}
+        run: |
+          echo "::error::Upstream sync failed - manual intervention required"
+          echo "Upstream version: $UPSTREAM_VERSION"
+          echo "Verification passed: $VERIFICATION_STATUS"

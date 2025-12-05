@@ -1,0 +1,70 @@
+{
+  "name": "@kellerai/morphmcp",
+  "version": "0.8.33-kellerai.1",
+  "description": "KellerAI-maintained fork of MorphLLM MCP with guaranteed filesystem tool support",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "kellerai-morph-mcp": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "test": "node test/verify-tools.js",
+    "verify": "node test/verify-tools.js",
+    "sync-upstream": "node scripts/sync-upstream.js",
+    "build": "echo 'Using pre-built dist from patched v0.8.33'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KellerAI-Plugins/kellerai-morphmcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "morphllm",
+    "filesystem",
+    "claude-code",
+    "kellerai",
+    "fork"
+  ],
+  "author": "KellerAI (fork maintainer)",
+  "license": "MIT",
+  "homepage": "https://github.com/KellerAI-Plugins/kellerai-morphmcp#readme",
+  "bugs": {
+    "url": "https://github.com/KellerAI-Plugins/kellerai-morphmcp/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  },
+  "kellerai": {
+    "upstream": {
+      "package": "@morphllm/morphmcp",
+      "version": "0.8.33",
+      "lastSync": "2024-12-04T20:30:00Z"
+    },
+    "modifications": [
+      "Restored 12 filesystem tools from v0.8.25",
+      "Preserved warpgrep_codebase_search from v0.8.33",
+      "Added complete tool schemas and helper functions",
+      "Total tools: 15 (12 filesystem + 3 MorphLLM)"
+    ],
+    "guarantees": [
+      "All 15 tools always available",
+      "No surprise removals in updates",
+      "Automated testing before release",
+      "Semantic versioning with -kellerai suffix"
+    ]
+  }
+}
