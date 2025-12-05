@@ -1,0 +1,39 @@
+# CodeRabbit configuration for kellerai-morphmcp
+#
+# This is a patched fork where dist/index.js is the actual source file
+# (no build step - see package.json "build" script). Therefore, we need
+# CodeRabbit to review changes in the dist directory.
+
+reviews:
+  # Include dist files for review (override default exclusion)
+  path_filters:
+    - "!**/node_modules/**"
+    - "!**/package-lock.json"
+    - "!**/pnpm-lock.yaml"
+    - "!**/yarn.lock"
+    # Include dist directory (this is our source!)
+    - "**/dist/**"
+
+  # Review all changes thoroughly since this is critical infrastructure
+  high_level_summary: true
+  review_status: true
+  poem: false
+
+  # Enable detailed code review
+  profile: "chill"
+  request_changes_workflow: false
+
+  # Enable finishing touches
+  tools:
+    shellcheck:
+      enabled: true
+    markdownlint:
+      enabled: true
+    yamllint:
+      enabled: true
+
+# Language-specific settings
+language:
+  javascript:
+    # Enable comprehensive JavaScript review
+    level: "comprehensive"
