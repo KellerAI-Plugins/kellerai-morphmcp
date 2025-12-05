@@ -8,10 +8,19 @@ The upstream `@morphllm/morphmcp` package removed all 12 filesystem tools in v0.
 
 ## Installation
 
+### Via pnpm (Recommended - part of dev-tools)
+
 ```bash
-# Using pnpm (recommended)
+# Global installation
 pnpm add -g @kellerai/morphmcp
 
+# Or as part of dev-tools marketplace
+# Already included in dev-tools plugin configuration
+```
+
+### Alternative Package Managers
+
+```bash
 # Using npm
 npm install -g @kellerai/morphmcp
 

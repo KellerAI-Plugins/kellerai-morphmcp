@@ -18,7 +18,10 @@
     "test": "node test/verify-tools.js",
     "verify": "node test/verify-tools.js",
     "sync-upstream": "node scripts/sync-upstream.js",
-    "build": "echo 'Using pre-built dist from patched v0.8.33'"
+    "build": "echo 'Using pre-built dist from patched v0.8.33'",
+    "link": "pnpm link --global",
+    "unlink": "pnpm unlink --global",
+    "reinstall": "pnpm install && pnpm link --global"
   },
   "repository": {
     "type": "git",
