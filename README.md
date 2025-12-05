@@ -1,6 +1,27 @@
 # @kellerai/morphmcp
 
+[![Tools](https://img.shields.io/badge/tools-15%20(12%20filesystem%20%2B%203%20morphllm)-success)](https://github.com/KellerAI-Plugins/kellerai-morphmcp)
+[![Status](https://img.shields.io/badge/status-patched%20%26%20maintained-blue)](https://github.com/KellerAI-Plugins/kellerai-morphmcp)
+[![Upstream](https://img.shields.io/badge/upstream-v0.8.33-lightgrey)](https://www.npmjs.com/package/@morphllm/morphmcp)
+
 **KellerAI-maintained fork of MorphLLM MCP with guaranteed filesystem tool support**
+
+> **⚠️ IMPORTANT:** This is a **patched fork** of `@morphllm/morphmcp` v0.8.33 with **all 15 tools restored**. The upstream package removed 12 filesystem tools in v0.8.26+ - this fork merges them back from v0.8.25 and guarantees they will never be removed.
+>
+> **Patch Details:**
+> - 📦 Merged v0.8.25 filesystem tools into v0.8.33 base
+> - 🔧 Preserved warpgrep_codebase_search from v0.8.33
+> - ✅ All 15 tools verified in automated tests
+> - 🔄 Daily upstream sync via GitHub Actions
+
+## 🔧 What's Been Patched
+
+| Category | Status | Details |
+|----------|--------|---------|
+| **Filesystem Tools** | ✅ **Restored (12)** | Merged from v0.8.25 |
+| **MorphLLM Tools** | ✅ **Preserved (3)** | Kept from v0.8.33 |
+| **Total Tools** | ✅ **15 Complete** | Verified in CI |
+| **Upstream Sync** | ✅ **Automated** | Daily via GitHub Actions |
 
 ## Why This Fork Exists
 
