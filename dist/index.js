@@ -544,6 +544,78 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             inputSchema: zodToJsonSchema(CodebaseSearchArgsSchema),
             requiresApiKey: true,
         },
+        {
+            name: "read_file",
+            description: "Read the full contents of a file from the codebase.",
+            inputSchema: zodToJsonSchema(ReadFileArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "read_multiple_files",
+            description: "Read the contents of multiple files at once.",
+            inputSchema: zodToJsonSchema(ReadMultipleFilesArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "write_file",
+            description: "Write or overwrite a file with new content.",
+            inputSchema: zodToJsonSchema(WriteFileArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "tiny_edit_file",
+            description: "Make small, precise edits to a specific line range in a file.",
+            inputSchema: zodToJsonSchema(TinyEditFileArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "create_directory",
+            description: "Create a new directory at the specified path.",
+            inputSchema: zodToJsonSchema(CreateDirectoryArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "list_directory",
+            description: "List files and directories at the specified path.",
+            inputSchema: zodToJsonSchema(ListDirectoryArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "list_directory_with_sizes",
+            description: "List files and directories with their sizes at the specified path.",
+            inputSchema: zodToJsonSchema(ListDirectoryWithSizesArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "directory_tree",
+            description: "Show directory structure as a tree view.",
+            inputSchema: zodToJsonSchema(DirectoryTreeArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "move_file",
+            description: "Move or rename a file from source to destination.",
+            inputSchema: zodToJsonSchema(MoveFileArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "search_files",
+            description: "Search for files matching specific patterns.",
+            inputSchema: zodToJsonSchema(SearchFilesArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "get_file_info",
+            description: "Get detailed information about a specific file.",
+            inputSchema: zodToJsonSchema(GetFileInfoArgsSchema),
+            requiresApiKey: true,
+        },
+        {
+            name: "list_allowed_directories",
+            description: "List all directories that the AI assistant is allowed to access.",
+            inputSchema: zodToJsonSchema(ListAllowedDirectoriesArgsSchema),
+            requiresApiKey: true,
+        }
     ];
     // Filter tools based on ENABLED_TOOLS and API key availability
     const availableTools = allTools.filter(tool => {
@@ -1275,3 +1347,4 @@ runServer().catch((error) => {
     console.error("Fatal error running server:", error);
     process.exit(1);
 });
+// Add a blank line to make the file editable
